@@ -1,0 +1,5 @@
+# Exclude unnecessary files from Docker build context
+src/cartographer/.git/
+src/cartographer_ros/.git/
+resources/
+CLAUDE.md

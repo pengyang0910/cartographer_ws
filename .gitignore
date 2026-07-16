@@ -1,0 +1,5 @@
+# Cartographer 源码 — 通过 git clone 获取
+src/
+
+# Rosbag 数据集 — 通过官方链接下载
+rosbag/
