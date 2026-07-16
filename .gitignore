@@ -1,5 +1,7 @@
-# Cartographer 源码 — 通过 git clone 获取
-src/
+# src 目录 — 保留目录结构，通过 git clone 获取源码
+src/*
+!src/.keep
 
-# Rosbag 数据集 — 通过官方链接下载
-rosbag/
+# rosbag 目录 — 保留目录结构，通过官方链接下载数据集
+rosbag/*
+!rosbag/.keep
