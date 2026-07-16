@@ -14,17 +14,18 @@ git clone https://github.com/ros2/cartographer.git -b ros2
 git clone https://github.com/ros2/cartographer_ros.git -b ros2
 cd ..
 
-# 2. 构建 Docker 镜像
+# 2. 构建 Docker 镜像（首次需执行，依赖变更后重新构建）
 docker build -t cartographer-ros2:V1.0 -f docker/Dockerfile .
 
 # 3. 启动容器
 ./docker/run.sh
 
-# 4. 容器内编译
+# 4. 容器内编译（在 src 目录下，产物落在 src/build/ src/install/ src/log/）
+cd src
 colcon build --symlink-install
 source install/setup.bash
 
-# 5. 在宿主机下载官方数据集并转换（见下方 数据集 章节），然后容器内运行
+# 5. 下载官方数据集并转换（见下方 数据集 章节），然后运行
 ros2 launch cartographer_ros offline_backpack_2d.launch.py \
     bag_filenames:=/workspace/rosbag/b2-2016-04-27-12-31-41_ros2
 ```
@@ -37,8 +38,13 @@ cartographer_ws/              # clone 后的初始状态
 │   ├── Dockerfile            # 镜像定义（ROS2 Humble + 依赖）
 │   ├── run.sh                # 启动容器脚本
 │   └── entrypoint.sh         # 容器入口点
-├── src/                      # 源码目录（放入 cartographer + cartographer_ros 后编译）
-│   └── .keep
+├── src/                      # 源码 + 编译产物
+│   ├── .keep
+│   ├── cartographer/         #   核心算法库（git clone 获取）
+│   ├── cartographer_ros/     #   ROS2 集成层（git clone 获取）
+│   ├── build/                #   colcon 构建中间产物
+│   ├── install/              #   colcon 安装产物（需 source 的 setup.bash 在此）
+│   └── log/                  #   colcon 构建日志
 ├── rosbag/                   # 数据集目录（下载 .bag 文件后放入此处）
 │   └── .keep
 ├── .dockerignore
@@ -84,9 +90,13 @@ cd cartographer_ws
 
 ## 编译
 
+`colcon build` 在 `src/` 目录下执行，编译产物落在 `src/build/`、`src/install/`、`src/log/`。
+
 在容器内执行：
 
 ```bash
+cd /workspace/src
+
 # 首次全量编译
 colcon build --symlink-install
 
@@ -132,7 +142,7 @@ rosbags-convert \
 以最快速度处理完 bag，不依赖实时时钟：
 
 ```bash
-source install/setup.bash
+source src/install/setup.bash
 ros2 launch cartographer_ros offline_backpack_2d.launch.py \
     bag_filenames:=/workspace/rosbag/b2-2016-04-27-12-31-41_ros2
 ```
@@ -142,7 +152,7 @@ ros2 launch cartographer_ros offline_backpack_2d.launch.py \
 按实时速度播放，在 RViz 中观察建图过程：
 
 ```bash
-source install/setup.bash
+source src/install/setup.bash
 ros2 launch cartographer_ros demo_backpack_2d.launch.py \
     bag_filename:=/workspace/rosbag/b2-2016-04-27-12-31-41_ros2
 ```
