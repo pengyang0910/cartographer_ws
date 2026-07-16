@@ -5,3 +5,6 @@ src/*
 # rosbag 目录 — 保留目录结构，通过官方链接下载数据集
 rosbag/*
 !rosbag/.keep
+
+# Docker 镜像压缩包
+docker/*.tar.gz

@@ -8,21 +8,27 @@
 git clone <this-repo>.git cartographer_ws
 cd cartographer_ws
 
-# 1. 下载源码
+# 1. 导入 Docker 镜像（二选一）
+# 方式 A：从压缩包加载（推荐，无需编译镜像）
+gunzip -c docker/cartographer-ubuntu2204-humble-v1.0.tar.gz | docker load
+# 方式 B：从 Dockerfile 构建（首次 run.sh 自动检测并提示构建）
+./docker/run.sh
+
+# 2. 下载源码
 cd src
 git clone https://github.com/ros2/cartographer.git -b ros2
 git clone https://github.com/ros2/cartographer_ros.git -b ros2
 cd ..
 
-# 2. 启动容器（首次运行 run.sh 会自动检测并构建镜像）
+# 3. 启动容器
 ./docker/run.sh
 
-# 3. 容器内编译（在 src 目录下，产物落在 src/build/ src/install/ src/log/）
+# 4. 容器内编译（在 src 目录下，产物落在 src/build/ src/install/ src/log/）
 cd src
 colcon build --symlink-install
 source install/setup.bash
 
-# 4. 下载官方数据集并转换（见下方 数据集 章节），然后运行
+# 5. 下载官方数据集并转换（见下方 数据集 章节），然后运行
 ros2 launch cartographer_ros offline_backpack_2d.launch.py \
     bag_filenames:=/workspace/rosbag/b2-2016-04-27-12-31-41_ros2
 ```
@@ -32,9 +38,10 @@ ros2 launch cartographer_ros offline_backpack_2d.launch.py \
 ```
 cartographer_ws/              # clone 后的初始状态
 ├── docker/                   # Docker 构建环境
-│   ├── Dockerfile            # 镜像定义（ROS2 Humble + 依赖）
-│   ├── run.sh                # 启动容器脚本
-│   └── entrypoint.sh         # 容器入口点
+│   ├── Dockerfile            #   镜像定义（ROS2 Humble + 依赖）
+│   ├── run.sh                #   启动容器脚本
+│   ├── entrypoint.sh         #   容器入口点
+│   └── cartographer-ubuntu2204-humble-v1.0.tar.gz  #   预构建镜像压缩包
 ├── src/                      # 源码 + 编译产物
 │   ├── .keep
 │   ├── cartographer/         #   核心算法库（git clone 获取）
@@ -69,6 +76,16 @@ git clone https://github.com/ros2/cartographer_ros.git -b ros2
 
 ### Docker 镜像
 
+仓库提供了预构建的镜像压缩包 `docker/cartographer-ubuntu2204-humble-v1.0.tar.gz`。
+
+**从压缩包加载（推荐）：**
+
+```bash
+gunzip -c docker/cartographer-ubuntu2204-humble-v1.0.tar.gz | docker load
+```
+
+**从 Dockerfile 构建：**
+
 `run.sh` 首次运行时会自动检测镜像是否存在，不存在则提示构建。也可手动构建：
 
 ```bash
@@ -76,7 +93,7 @@ cd cartographer_ws
 docker build -t cartographer-ubuntu2204-humble:v1.0 -f docker/Dockerfile .
 ```
 
-镜像包含 Ubuntu 22.04、ROS2 Humble (desktop) 及全部编译依赖（Ceres Solver、Eigen3、PCL、Abseil、Protobuf、Lua、gflags/glog、Cairo、Boost）。
+镜像包含 Ubuntu 22.04、ROS2 Humble (desktop) 及全部编译依赖（Ceres Solver、Eigen3、PCL、Abseil、Protobuf、Lua、gflags/glog、Cairo、Boost），并已预编译 cartographer 核心库和 cartographer_ros。
 
 ### 启动容器
 
