@@ -1,6 +1,8 @@
-# Cartographer ROS2 环境
+# Cartographer ROS2 Docker 环境
 
-基于 Docker (Ubuntu 22.04 + ROS2 Humble) 的 Cartographer SLAM 开发环境，支持从源码编译和运行。
+基于 Docker 容器搭建的 Cartographer SLAM 开发环境。所有依赖（ROS2 Humble、编译工具链、第三方库）封装在镜像内，源码通过挂载进容器编译运行，无需在宿主机安装 ROS2。
+
+**宿主机只需安装 Docker。**
 
 ## 快速开始
 
@@ -72,9 +74,11 @@ git clone https://github.com/ros2/cartographer_ros.git -b ros2
 
 > **注意**：Google 官方 `cartographer-project` 组织下的仓库没有 ROS2 分支。ROS2 移植版在 `github.com/ros2` 组织下，分支名为 `ros2`。
 
-## 环境构建
+## Docker 环境
 
-### Docker 镜像
+所有编译、运行操作均在容器内进行，宿主机只需安装 Docker。
+
+### 获取镜像
 
 仓库提供了预构建的镜像压缩包 `docker/cartographer-ubuntu2204-humble-v1.0.tar.gz`。
 
@@ -106,9 +110,7 @@ cd cartographer_ws
 
 ## 编译
 
-`colcon build` 在 `src/` 目录下执行，编译产物落在 `src/build/`、`src/install/`、`src/log/`。
-
-在容器内执行：
+在容器内执行，`colcon build` 在 `src/` 目录下运行，编译产物落在 `src/build/`、`src/install/`、`src/log/`：
 
 ```bash
 cd /workspace/src
