@@ -160,7 +160,7 @@ RUN mkdir -p /opt/cartographer_ws/src
 COPY src/cartographer_ros /opt/cartographer_ws/src/cartographer_ros
 RUN cd /opt/cartographer_ws && \
     . /opt/ros/humble/setup.bash && \
-    colcon build --packages-select cartographer_ros \
+    colcon build \
         --cmake-args -DCMAKE_BUILD_TYPE=Release \
     && rm -rf /opt/cartographer_ws/build /opt/cartographer_ws/log
 

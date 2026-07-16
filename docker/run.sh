@@ -9,7 +9,7 @@ set -e
 # is mounted at /workspace for development convenience.
 # ------------------------------------------------------------
 
-IMAGE_NAME="${IMAGE_NAME:-cartographer-ubuntu2204-ros2:V1.0}"
+IMAGE_NAME="${IMAGE_NAME:-cartographer-ubuntu2204-humble:v1.0}"
 CONTAINER_NAME="${CONTAINER_NAME:-cartographer-dev}"
 WORKSPACE_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 

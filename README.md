@@ -73,7 +73,7 @@ git clone https://github.com/ros2/cartographer_ros.git -b ros2
 
 ```bash
 cd cartographer_ws
-docker build -t cartographer-ubuntu2204-ros2:V1.0 -f docker/Dockerfile .
+docker build -t cartographer-ubuntu2204-humble:v1.0 -f docker/Dockerfile .
 ```
 
 镜像包含 Ubuntu 22.04、ROS2 Humble (desktop) 及全部编译依赖（Ceres Solver、Eigen3、PCL、Abseil、Protobuf、Lua、gflags/glog、Cairo、Boost）。
